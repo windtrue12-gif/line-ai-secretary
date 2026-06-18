@@ -16,7 +16,7 @@ jobs:
 
       - run: pip install -r requirements.txt
 
-      - run: python bot.py
+      - run: python RSS_bot.py
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
