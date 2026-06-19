@@ -1,6 +1,7 @@
 import requests
 from openai import OpenAI
 import feedparser
+import os
 
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 USER_ID = os.getenv("USER_ID")
