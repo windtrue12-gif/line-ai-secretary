@@ -1,3 +1,5 @@
+name: Notion Routine Bot
+
 on:
   schedule:
     - cron: '0 22 * * *'
