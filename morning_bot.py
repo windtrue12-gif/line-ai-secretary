@@ -21,10 +21,11 @@ def get_notion_tasks():
     tasks = []
 
     for row in response["results"]:
-		active = row["properties"]["Active"]["checkbox"]
-		time = row["properties"]["Time"]["select"]["name"]
+        active = row["properties"]["Active"]["checkbox"]
+        time = row["properties"]["Time"]["select"]["name"]
+
         if active and time == "朝":
-		    routine = row["properties"]["Routine"]["title"][0]["plain_text"]
+            routine = row["properties"]["Routine"]["title"][0]["plain_text"]
             tasks.append(f"✅ {routine}")
 
     return tasks
