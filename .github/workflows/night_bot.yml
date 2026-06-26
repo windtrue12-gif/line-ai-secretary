@@ -1,4 +1,4 @@
-name: Notion Routine Bot
+name: Night Routine Bot
 
 on:
   schedule:
