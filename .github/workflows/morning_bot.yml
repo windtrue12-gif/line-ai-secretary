@@ -18,6 +18,10 @@ jobs:
 
       - run: pip install -r requirements.txt
 
+      - name: Create Google credentials file
+        run: |
+          echo '${{ secrets.GOOGLE_CREDENTIALS }}' > service_account.json
+
       - name: Run Bot
         env:
           LINE_TOKEN: ${{ secrets.LINE_TOKEN }}
