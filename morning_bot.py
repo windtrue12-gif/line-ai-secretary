@@ -50,11 +50,10 @@ def get_today_schedule():
     events = events_result.get("items", [])
     schedules = []
 
-        for event in events:
-            start = event["start"].get("dateTime", event["start"].get("date"))
-            dt = datetime.fromisoformat(start)
-
-            schedules.append(f"{dt.strftime('%H:%M')}　{event['summary']}")
+    for event in events:
+        start = event["start"].get("dateTime", event["start"].get("date"))
+        dt = datetime.fromisoformat(start)
+        schedules.append(f"{dt.strftime('%H:%M')}　{event['summary']}")
 	
      return schedules
 
