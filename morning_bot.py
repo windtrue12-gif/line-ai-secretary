@@ -55,7 +55,7 @@ def get_today_schedule():
         dt = datetime.fromisoformat(start)
         schedules.append(f"{dt.strftime('%H:%M')}　{event['summary']}")
 	
-	return schedules
+    return schedules
 
     
 # タスクリスト作成関数
