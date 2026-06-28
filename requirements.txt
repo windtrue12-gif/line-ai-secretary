@@ -2,6 +2,5 @@ openai
 requests
 feedparser
 notion-client
-googleapiclient
-datetime
-zoneinfo
+google-api-python-client
+google-auth
