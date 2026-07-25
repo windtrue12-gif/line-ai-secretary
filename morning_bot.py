@@ -89,7 +89,6 @@ def get_reminders():
     response = notion.data_sources.query(
         data_source_id=REMINDER_DATA_SOURCE_ID
     )
-
 	today = datetime.now(ZoneInfo("Asia/Tokyo"))
 
 	week_map = {
