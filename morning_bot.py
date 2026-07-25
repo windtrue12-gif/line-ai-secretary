@@ -91,7 +91,7 @@ def get_reminders():
     )
     
     today = datetime.now(ZoneInfo("Asia/Tokyo"))
-	week_map = {
+    week_map = {
     		"Monday": "月",
     		"Tuesday": "火",
     		"Wednesday": "水",
@@ -100,11 +100,11 @@ def get_reminders():
     		"Saturday": "土",
     		"Sunday": "日"
 		}
-	today_week = week_map[today.strftime("%A")]
+    today_week = week_map[today.strftime("%A")]
 
-	reminders = []
+    reminders = []
 
-	for row in response["results"]:
+    for row in response["results"]:
 		active = row["properties"]["Active"]["checkbox"]
 		condition = row["properties"]["condition"]["select"]["name"]
 		value = row["properties"]["value"]["plain_text"]
@@ -119,7 +119,7 @@ def get_reminders():
 				if today_week in values:
 					reminders.append(f"📢 {Reminder}")
 	
-	return reminders
+    return reminders
 
 
 
