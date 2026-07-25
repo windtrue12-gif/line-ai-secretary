@@ -105,19 +105,19 @@ def get_reminders():
     reminders = []
 
     for row in response["results"]:
-		active = row["properties"]["Active"]["checkbox"]
-		condition = row["properties"]["condition"]["select"]["name"]
-		value = row["properties"]["value"]["plain_text"]
-		time = row["properties"]["Time"]["select"]["name"]
+        active = row["properties"]["Active"]["checkbox"]
+        condition = row["properties"]["condition"]["select"]["name"]
+        value = row["properties"]["value"]["plain_text"]
+        time = row["properties"]["Time"]["select"]["name"]
 		
-		if active and time == "朝":
-			if condition == "曜日":
-				routine = row["properties"]["Reminder"]["title"][0]["plain_text"]
-				tasks.append(f"✅ {routine}")
-				values = value.split(",")
+        if active and time == "朝":
+            if condition == "曜日":
+                routine = row["properties"]["Reminder"]["title"][0]["plain_text"]
+                tasks.append(f"✅ {routine}")
+                values = value.split(",")
 				
-				if today_week in values:
-					reminders.append(f"📢 {Reminder}")
+                if today_week in values:
+                    reminders.append(f"📢 {Reminder}")
 	
     return reminders
 
