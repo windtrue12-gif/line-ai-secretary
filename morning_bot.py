@@ -7,8 +7,8 @@ from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
-DATABASE_ID = "911913ff6b1743fa97fec592d0f0881b"
-DATA_SOURCE_ID = os.getenv("DATA_SOURCE_ID")
+ROUTINE_DATABASE_ID = "911913ff6b1743fa97fec592d0f0881b"
+ROUTINE_DATA_SOURCE_ID = os.getenv("ROUTINE_DATA_SOURCE_ID")
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 USER_ID = os.getenv("USER_ID")
 url_line = "https://api.line.me/v2/bot/message/push"
@@ -64,7 +64,7 @@ def get_notion_tasks():
     notion = Client(auth=NOTION_TOKEN)
 
     response = notion.data_sources.query(
-        data_source_id=DATA_SOURCE_ID
+        data_source_id=ROUTINE_DATA_SOURCE_ID
     )
 
     tasks = []
