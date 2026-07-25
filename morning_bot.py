@@ -117,6 +117,3 @@ message += "今日の朝ルーティン\n"
 message += "\n".join(tasks)
 
 send_line(message)
-    message += "\n\n"
-
-send_line(message)
