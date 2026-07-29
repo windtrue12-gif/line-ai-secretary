@@ -8,7 +8,9 @@ from zoneinfo import ZoneInfo
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 ROUTINE_DATABASE_ID = "911913ff6b1743fa97fec592d0f0881b"
+REMINDER_DATABASE_ID = "3a54234075608014a236f5d3b278dbfa"
 ROUTINE_DATA_SOURCE_ID = os.getenv("ROUTINE_DATA_SOURCE_ID")
+REMINDER_DATA_SOURCE_ID = os.getenv("REMINDER_DATA_SOURCE_ID")
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 USER_ID = os.getenv("USER_ID")
 url_line = "https://api.line.me/v2/bot/message/push"
@@ -79,6 +81,48 @@ def get_notion_tasks():
 
     return tasks
 
+# リマインダーリスト作成関数
+def get_reminders():
+
+    notion = Client(auth=NOTION_TOKEN)
+
+    response = notion.data_sources.query(
+        data_source_id=REMINDER_DATA_SOURCE_ID
+    )
+    
+    today = datetime.now(ZoneInfo("Asia/Tokyo"))
+    week_map = {
+    		"Monday": "月",
+    		"Tuesday": "火",
+    		"Wednesday": "水",
+    		"Thursday": "木",
+    		"Friday": "金",
+    		"Saturday": "土",
+    		"Sunday": "日"
+		}
+    today_week = week_map[today.strftime("%A")]
+
+    reminders = []
+
+    for row in response["results"]:
+        active = row["properties"]["Active"]["checkbox"]
+        condition = row["properties"]["Condition"]["select"]["name"]
+        value = row["properties"]["Value"]["text"]
+        time = row["properties"]["Time"]["select"]["name"]
+		
+        if active and time == "朝":
+            if condition == "曜日":
+                routine = row["properties"]["Reminder"]["title"][0]["plain_text"]
+                tasks.append(f"✅ {routine}")
+                values = value.split(",")
+				
+                if today_week in values:
+                    reminders.append(f"📢 {Reminder}")
+	
+    return reminders
+
+
+
 # メッセージ作成関数
 def send_line(message):
     headers = {
@@ -100,6 +144,7 @@ def send_line(message):
 
 tasks = get_notion_tasks()
 schedules = get_today_schedule()
+reminders = get_reminders()
 
 # メッセージ作成
 message = "☀️おはよう！\n\n"
@@ -115,3 +160,13 @@ message += "\n\n"
 
 message += "今日の朝ルーティン\n"
 message += "\n".join(tasks)
+
+if reminders:
+
+    message += "\n📢 今日のリマインダー\n"
+
+    message += "\n".join(reminders)
+
+    message += "\n\n"
+
+send_line(message)
