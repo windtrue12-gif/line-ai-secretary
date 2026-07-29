@@ -107,7 +107,7 @@ def get_reminders():
     for row in response["results"]:
         active = row["properties"]["Active"]["checkbox"]
         condition = row["properties"]["Condition"]["select"]["name"]
-        value = row["properties"]["Value"]["text"]
+        value = row["properties"]["Value"]["rich_text"][0]["plain_text"]
         time = row["properties"]["Time"]["select"]["name"]
 		
         if active and time == "朝":
