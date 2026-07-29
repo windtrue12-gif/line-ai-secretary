@@ -113,7 +113,7 @@ def get_reminders():
         if active and time == "朝":
             if condition == "曜日":
                 reminder = row["properties"]["Reminder"]["title"][0]["plain_text"]
-                tasks.append(f"✅ {routine}")
+                tasks.append(f"✅ {reminder}")
                 values = value.split(",")
 				
                 if today_week in values:
