@@ -163,7 +163,7 @@ message += "\n".join(tasks)
 if reminders:
 	message += "\n\n"
 
-    message += "🔔今日のリマインダー\n"
+	message += "🔔今日のリマインダー\n"
 
     message += "\n".join(reminders)
 
