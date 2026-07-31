@@ -77,7 +77,7 @@ def get_notion_tasks():
 
         if active and time == "朝":
             routine = row["properties"]["Routine"]["title"][0]["plain_text"]
-            tasks.append(f"✅ {routine}")
+            tasks.append(f"- {routine}")
 
     return tasks
 
@@ -116,7 +116,7 @@ def get_reminders():
                 values = value.split(",")
 				
                 if today_week in values:
-                    reminders.append(f"📢 {reminder}")
+                    reminders.append(f"- {reminder}")
 	
     return reminders
 
@@ -148,7 +148,7 @@ reminders = get_reminders()
 # メッセージ作成
 message = "☀️おはよう！\n\n"
 
-message += "📅 本日の予定\n"
+message += "📅 本日の予定 📅\n"
 
 if schedules:
     message += "\n".join(schedules)
@@ -157,13 +157,13 @@ else:
 
 message += "\n\n"
 
-message += "📋今日の朝ルーティン\n"
+message += "✅ 今日の朝ルーティン ✅\n"
 message += "\n".join(tasks)
 
 if reminders:
 	message += "\n\n"
 
-	message += "🔔今日のリマインダー\n"
+	message += "🔔 今日のリマインダー 🔔\n"
 
 	message += "\n".join(reminders)
 
