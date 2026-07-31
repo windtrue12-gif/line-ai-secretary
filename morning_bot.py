@@ -161,11 +161,10 @@ message += "今日の朝ルーティン\n"
 message += "\n".join(tasks)
 
 if reminders:
+	message += "\n\n"
 
-    message += "\n📢 今日のリマインダー\n"
+    message += "今日のリマインダー\n"
 
     message += "\n".join(reminders)
-
-    message += "\n\n"
 
 send_line(message)
