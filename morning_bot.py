@@ -157,13 +157,13 @@ else:
 
 message += "\n\n"
 
-message += "今日の朝ルーティン\n"
+message += "📋今日の朝ルーティン\n"
 message += "\n".join(tasks)
 
 if reminders:
 	message += "\n\n"
 
-    message += "今日のリマインダー\n"
+    message += "🔔今日のリマインダー\n"
 
     message += "\n".join(reminders)
 
