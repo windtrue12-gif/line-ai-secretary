@@ -76,7 +76,7 @@ def get_notion_tasks():
 
         if active and time == "夜":
             routine = row["properties"]["Routine"]["title"][0]["plain_text"]
-            tasks.append(f"✅ {routine}")
+            tasks.append(f"- {routine}")
 
     return tasks
 
