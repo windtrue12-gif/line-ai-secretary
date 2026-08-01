@@ -1,15 +1,65 @@
 from notion_client import Client
 import requests
 import os
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 
 NOTION_TOKEN = os.getenv("NOTION_TOKEN")
 ROUTINE_DATABASE_ID = "911913ff6b1743fa97fec592d0f0881b"
+REMINDER_DATABASE_ID = "3a54234075608014a236f5d3b278dbfa"
 ROUTINE_DATA_SOURCE_ID = os.getenv("ROUTINE_DATA_SOURCE_ID")
+REMINDER_DATA_SOURCE_ID = os.getenv("REMINDER_DATA_SOURCE_ID")
 LINE_TOKEN = os.getenv("LINE_TOKEN")
 USER_ID = os.getenv("USER_ID")
 url_line = "https://api.line.me/v2/bot/message/push"
 
+# スケジュールリスト作成関数
+def get_today_schedule():
+    
+    SERVICE_ACCOUNT_FILE = "service_account.json"
+    SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
+    CALENDAR_ID = "windtrue12@gmail.com"
 
+    # Google Calendar API認証
+    credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE,
+        scopes=SCOPES
+    )
+
+    service = build("calendar", "v3", credentials=credentials)
+    
+    # 日本時間
+    jst = ZoneInfo("Asia/Tokyo")
+    tomorrow = datetime.now(jst) + timedelta(days=1)
+
+    # 明日の0時
+    start = tomorrow.replace(hour=0, minute=0, second=0, microsecond=0)
+
+    # 明後日の0時
+    end = start + timedelta(days=1)
+
+    # 明日の予定を取得
+    events_result = service.events().list(
+        calendarId=CALENDAR_ID,
+        timeMin=start.isoformat(),
+        timeMax=end.isoformat(),
+        singleEvents=True,
+        orderBy="startTime"
+    ).execute()
+
+    events = events_result.get("items", [])
+    schedules = []
+
+    for event in events:
+        start = event["start"].get("dateTime", event["start"].get("date"))
+        dt = datetime.fromisoformat(start)
+        schedules.append(f"{dt.strftime('%H:%M')}　{event['summary']}")
+	
+    return schedules
+
+# タスクリスト作成関数
 def get_notion_tasks():
 
     notion = Client(auth=NOTION_TOKEN)
@@ -30,6 +80,46 @@ def get_notion_tasks():
 
     return tasks
 
+# リマインダーリスト作成関数
+def get_reminders():
+
+    notion = Client(auth=NOTION_TOKEN)
+
+    response = notion.data_sources.query(
+        data_source_id=REMINDER_DATA_SOURCE_ID
+    )
+    
+    today = datetime.now(ZoneInfo("Asia/Tokyo"))
+    week_map = {
+    		"Monday": "月",
+    		"Tuesday": "火",
+    		"Wednesday": "水",
+    		"Thursday": "木",
+    		"Friday": "金",
+    		"Saturday": "土",
+    		"Sunday": "日"
+		}
+    today_week = week_map[today.strftime("%A")]
+
+    reminders = []
+
+    for row in response["results"]:
+        active = row["properties"]["Active"]["checkbox"]
+        condition = row["properties"]["Condition"]["select"]["name"]
+        value = row["properties"]["Value"]["rich_text"][0]["plain_text"]
+        time = row["properties"]["Time"]["select"]["name"]
+		
+        if active and time == "夜":
+            if condition == "曜日":
+                reminder = row["properties"]["Reminder"]["title"][0]["plain_text"]
+                values = value.split(",")
+				
+                if today_week in values:
+                    reminders.append(f"- {reminder}")
+	
+    return reminders
+
+# メッセージ作成関数
 def send_line(message):
     headers = {
         "Authorization": f"Bearer {LINE_TOKEN}",
@@ -49,8 +139,29 @@ def send_line(message):
     return requests.post(url_line, headers=headers, json=data)
 
 tasks = get_notion_tasks()
+schedules = get_today_schedule()
+reminders = get_reminders()
 
-message = "🌙お疲れさま！\n\n今日の夜ルーティン\n\n"
+# メッセージ作成
+message = "🌙お疲れさま！\n\n"
+
+message += "📅 明日の予定 📅\n"
+
+if schedules:
+    message += "\n".join(schedules)
+else:
+    message += "予定はありません！"
+
+message += "\n\n"
+
+message += "✅ 今日の夜ルーティン ✅\n"
 message += "\n".join(tasks)
+
+if reminders:
+	message += "\n\n"
+
+	message += "🔔 夜のリマインダー 🔔\n"
+
+	message += "\n".join(reminders)
 
 send_line(message)
