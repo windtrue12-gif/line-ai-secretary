@@ -24,4 +24,5 @@ jobs:
           USER_ID: ${{ secrets.USER_ID }}
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           ROUTINE_DATA_SOURCE_ID: ${{ secrets.ROUTINE_DATA_SOURCE_ID }}
+          REMINDER_DATA_SOURCE_ID: ${{ secrets.REMINDER_DATA_SOURCE_ID }}
         run: python night_bot.py
